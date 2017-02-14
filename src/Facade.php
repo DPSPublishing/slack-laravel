@@ -1,6 +1,6 @@
 <?php
 
-namespace Maknz\Slack\Laravel;
+namespace DPSPublishing\Slack\Laravel;
 
 class Facade extends \Illuminate\Support\Facades\Facade
 {

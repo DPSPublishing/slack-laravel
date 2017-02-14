@@ -1,6 +1,6 @@
 <?php
 
-namespace Maknz\Slack\Laravel;
+namespace DPSPublishing\Slack\Laravel;
 
 use Maknz\Slack\Client as Client;
 use GuzzleHttp\Client as Guzzle;
