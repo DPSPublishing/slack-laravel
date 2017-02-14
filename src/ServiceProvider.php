@@ -7,19 +7,6 @@ use GuzzleHttp\Client as Guzzle;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
-    /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = false;
-
-    /**
-     * The actual provider.
-     *
-     * @var \Illuminate\Support\ServiceProvider
-     */
-    protected $provider;
 
     /**
      * Bootstrap the application events.
