@@ -1,6 +1,4 @@
-<?php
-
-namespace DPSPublishing\Slack\Laravel;
+<?php namespace DPSPublishing\Slack;
 
 use Maknz\Slack\Client as Client;
 use GuzzleHttp\Client as Guzzle;
@@ -45,5 +43,15 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         });
 
         $this->app->bind(Client::class, 'dps.slack');
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return ['dps.slack'];
     }
 }
