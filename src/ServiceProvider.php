@@ -2,7 +2,8 @@
 
 namespace Maknz\Slack\Laravel;
 
-use RuntimeException;
+use Maknz\Slack\Client as Client;
+use GuzzleHttp\Client as Guzzle;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -21,26 +22,13 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     protected $provider;
 
     /**
-     * Instantiate the service provider.
-     *
-     * @param mixed $app
-     * @return void
-     */
-    public function __construct($app)
-    {
-        parent::__construct($app);
-
-        $this->provider = $this->getProvider();
-    }
-
-    /**
      * Bootstrap the application events.
      *
      * @return void
      */
     public function boot()
     {
-        return $this->provider->boot();
+        $this->publishes([__DIR__.'/config/config.php' => config_path('slack.php')]);
     }
 
     /**
@@ -50,26 +38,25 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function register()
     {
-        return $this->provider->register();
-    }
+        $this->mergeConfigFrom(__DIR__.'/config/config.php', 'slack');
 
-    /**
-     * Return the service provider for the particular Laravel version.
-     *
-     * @return mixed
-     */
-    private function getProvider()
-    {
-       return new ServiceProviderLaravel5($this->app);
-    }
+        $this->app->singleton('dps.slack', function ($app) {
+            return new Client(
+                $app['config']->get('slack.endpoint'),
+                [
+                    'channel' => $app['config']->get('slack.channel'),
+                    'username' => $app['config']->get('slack.username'),
+                    'icon' => $app['config']->get('slack.icon'),
+                    'link_names' => $app['config']->get('slack.link_names'),
+                    'unfurl_links' => $app['config']->get('slack.unfurl_links'),
+                    'unfurl_media' => $app['config']->get('slack.unfurl_media'),
+                    'allow_markdown' => $app['config']->get('slack.allow_markdown'),
+                    'markdown_in_attachments' => $app['config']->get('slack.markdown_in_attachments'),
+                ],
+                new Guzzle
+            );
+        });
 
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return ['maknz.slack'];
+        $this->app->bind(Client::class, 'dps.slack');
     }
 }
